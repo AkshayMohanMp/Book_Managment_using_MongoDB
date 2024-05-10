@@ -1,10 +1,15 @@
 const express = require("express");
 
 const {books} =require("../data/books.json");
-const {users} =require("../data/users.json")
+const {users} =require("../data/users.json");
 
 
 const router = express.Router();
+
+
+
+const {userModel, BookModel} = require("../model");
+const { getAllBooks, getSingleBookById, addNewBook } = require("../controller/book-controller");
 
 
 /*
@@ -14,13 +19,13 @@ const router = express.Router();
 *access: Public
 *parameter: None
 */ 
-
-router.get("/",(req, res)=>{
-    res.status(200).json({
-        success: true,
-        data:books
-    })
-})
+router.get("/",getAllBooks);
+// router.get("/",(req, res)=>{
+//     res.status(200).json({
+//         success: true,
+//         data:books
+//     })
+// })
 
 
 
@@ -31,21 +36,21 @@ router.get("/",(req, res)=>{
 *access: Public
 *parameter: ID
 */ 
-
-router.get("/:id",(req, res)=>{
-    const {id} =req.params;
-    const book = books.find((each)=> each.id ===id);
-    if(!book){
-        return res.status(404).json({
-            success: false,
-            message: "book not Found for the givven ID"
-        })
-    }
-    return res.status(200).json({
-        sucess:true,
-        data: book
-    })
-})
+router.get("/:id",getSingleBookById)
+// router.get("/:id",(req, res)=>{
+//     const {id} =req.params;
+//     const book = books.find((each)=> each.id ===id);
+//     if(!book){
+//         return res.status(404).json({
+//             success: false,
+//             message: "book not Found for the givven ID"
+//         })
+//     }
+//     return res.status(200).json({
+//         sucess:true,
+//         data: book
+//     })
+// })
 
 
 /*
@@ -55,24 +60,7 @@ router.get("/:id",(req, res)=>{
 *access: Public
 *parameter: no
 */ 
-router.post("/", (req, res)=>{
-    const{id, name, author, genre, price, publisher} =req.body;
-
-    const book = books.find((each)=> each.id ===id);
-    if(book){
-        return res.status(404).json({
-            success: false,
-            message: "Book with the same id exist"
-        })
-    }
-    books.push(
-        {id, name, author, genre, price, publisher }
-    )
-    return res.status(201).json({
-        success: true,
-        data: books
-    })
-})
+router.post("/", addNewBook);
 
 
 
