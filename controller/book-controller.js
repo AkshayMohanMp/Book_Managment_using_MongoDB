@@ -74,12 +74,13 @@ exports.getSingleBookById = async(req, res)=>{
 // })
 
 exports.addNewBook = async(req, res)=>{
-    const{data} =req.body;
+    const {data} =req.body;
+
     if(!data)
-        return res.status.json({
+        return res.status(404).json({
             success: false,
-            message: "No Data Provided"
-    })
+            message: "No data Provided"
+        })
 
     // const book = books.find((each)=> each.id ===id);
     await BookModel.create(data)
@@ -97,6 +98,63 @@ exports.addNewBook = async(req, res)=>{
     return res.status(201).json({
         success: true,
         data: allBooks
+    })  
+}
+
+// router.put("/:id", (req,res)=>{
+//     const {id}= req.params;
+//     const {data} = req.body;
+//     const book = books.find((each)=> each.id ===id);
+//     if(!book){
+//         return res.status(404).json({
+//             success: false,
+//             message: "Books not found exist"
+//         })
+//     }
+//     const updateBook = books.map((each)=>{
+//         if(each.id===id){
+//             return{
+//                 ...each,
+//                 ...data
+//             }
+//         }
+//         return each;
+//     })
+//     return res.status(202).json({
+//         success: true,
+//         data: updateBook
+//     })
+// })
+
+
+
+exports.updateBookById = async(req,res)=>{
+    const {id}= req.params;
+    const {data} = req.body;
+    // const book = books.find((each)=> each.id ===id);
+    // if(!book){
+    //     return res.status(404).json({
+    //         success: false,
+    //         message: "Books not found exist"
+    //     })
+    // }
+    // const updateBook = books.map((each)=>{
+    //     if(each.id===id){
+    //         return{
+    //             ...each,
+    //             ...data
+    //         }
+    //     }
+    //     return each;
+    // })
+
+    const updateBook = await BookModel.findByIdAndUpdate({
+        _id: id,
+    }, data,{new: true})
+
+    return res.status(202).json({
+        success: true,
+        data: updateBook
     })
 }
 // module.export = {getAllBooks, getSingleBookById}
